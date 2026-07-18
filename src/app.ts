@@ -1,9 +1,11 @@
 import express, { Express } from 'express';
+import swaggerUi from 'swagger-ui-express';
 import { productRouter } from './routes/productRoutes';
 import { orderRouter } from './routes/orderRoutes';
 import { errorHandler } from './middleware/errorHandler';
 import { productRepo } from './repositories/productRepo';
 import { couponRepo } from './repositories/couponRepo';
+import { openapiSpec } from './openapi';
 
 export async function createApp(): Promise<Express> {
   const app = express();
@@ -22,6 +24,7 @@ export async function createApp(): Promise<Express> {
   ]);
 
   app.get('/health', (_req, res) => res.json({ status: 'ok' }));
+  app.use('/docs', swaggerUi.serve, swaggerUi.setup(openapiSpec));
   app.use('/products', productRouter);
   app.use('/orders', orderRouter);
 
