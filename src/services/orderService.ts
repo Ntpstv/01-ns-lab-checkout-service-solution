@@ -1,6 +1,6 @@
 import { randomUUID } from 'crypto';
 import { CartLine, Order } from '../types';
-import { computeSubtotal, priceCart } from './pricingService';
+import { computeSubtotal, priceFromSubtotal } from './pricingService';
 import { discountForCoupon } from './couponService';
 import * as inventory from './inventoryService';
 import { orderRepo } from '../repositories/orderRepo';
@@ -28,7 +28,7 @@ async function doCheckout(input: CheckoutInput): Promise<Order> {
   // 2) Price the cart with the coupon's discount.
   const subtotal = await computeSubtotal(input.lines);
   const discount = discountForCoupon(coupon, subtotal);
-  const breakdown = await priceCart(input.lines, discount);
+  const breakdown = priceFromSubtotal(subtotal, discount);
 
   // 3) Reserve stock, releasing anything already taken if a later line fails.
   const reserved: CartLine[] = [];

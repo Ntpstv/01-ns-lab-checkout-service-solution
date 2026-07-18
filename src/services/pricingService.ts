@@ -20,14 +20,24 @@ export function taxOf(amountCents: number): number {
 }
 
 /**
- * Price a cart. `discountCents` is supplied by the caller (Dev track will
- * wire couponService in). Tax is charged on (subtotal - discount).
- * Discount is clamped so it can never exceed the subtotal.
+ * Turn a subtotal + discount into a full breakdown. Tax is charged on
+ * (subtotal - discount); discount is clamped so it can never exceed the
+ * subtotal. Pulled out of `priceCart` so callers that already have the
+ * subtotal (e.g. to compute a coupon discount) don't pay for a second
+ * `computeSubtotal` pass.
  */
-export async function priceCart(lines: CartLine[], discountCents = 0): Promise<PriceBreakdown> {
-  const subtotalCents = await computeSubtotal(lines);
+export function priceFromSubtotal(subtotalCents: number, discountCents = 0): PriceBreakdown {
   const discount = Math.max(0, Math.min(discountCents, subtotalCents));
   const taxable = subtotalCents - discount;
   const taxCents = taxOf(taxable);
   return { subtotalCents, discountCents: discount, taxCents, totalCents: taxable + taxCents };
+}
+
+/**
+ * Price a cart. `discountCents` is supplied by the caller (Dev track will
+ * wire couponService in).
+ */
+export async function priceCart(lines: CartLine[], discountCents = 0): Promise<PriceBreakdown> {
+  const subtotalCents = await computeSubtotal(lines);
+  return priceFromSubtotal(subtotalCents, discountCents);
 }
