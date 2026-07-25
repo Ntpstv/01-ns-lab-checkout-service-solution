@@ -55,6 +55,41 @@ ship  →  gh pr view --json number  →  review-pr $PR
 3. Invoke `review-pr` with that number
 4. Report the combined result: PR link + review verdict
 
+> Trained in this lab repo (Notion MCP is available here); designed generic so it can move to the real FE repo's .claude/skills/ once verified.
+
+### `breakdown-feature`
+
+`.claude/skills/breakdown-feature/SKILL.md`
+
+**Trigger:** `breakdown feature <notion-link>`
+
+Fetches a Notion feature spec, proposes a subtask breakdown for FE work, and — only after you confirm — writes it back into the same page as a to-do checklist.
+
+1. `notion-fetch` the page
+2. Propose subtasks grouped by UI, data/state, edge cases, and tests
+3. Wait for confirmation before writing anything
+4. `notion-update-page` to append the checklist
+
+### `plan-subtask`
+
+`.claude/skills/plan-subtask/SKILL.md`
+
+**Trigger:** `plan subtask <notion-link> <name-or-number>`
+
+Turns one checklist item from a Notion feature page into a concrete plan (goal, files, approach, edge cases, tests) — no code written, nothing written back to Notion.
+
+### `start-feature` (chain skill)
+
+`.claude/skills/start-feature/SKILL.md`
+
+**Trigger:** `start feature <notion-link>`
+
+Runs `breakdown-feature`, then asks which subtasks to plan now, then calls `plan-subtask` for each one chosen.
+
+```
+start-feature → breakdown-feature → (pick subtasks) → plan-subtask × N
+```
+
 ---
 
 ## Hooks
@@ -95,14 +130,17 @@ Intercepts any command containing `git commit`, runs `npm run typecheck` first. 
 
 ## Files touched
 
-| File                                | Purpose                                               |
-| ----------------------------------- | ----------------------------------------------------- |
-| `.claude/skills/ship/SKILL.md`      | skill: review → test → commit → PR                    |
-| `.claude/skills/review-pr/SKILL.md` | skill: review a real PR against the checklist         |
-| `.claude/skills/deliver/SKILL.md`   | chain skill: ship → review-pr                         |
-| `.claude/hooks/format.sh`           | auto-format edited/created files                      |
-| `.claude/hooks/guard-commit.sh`     | block commit if typecheck is red                      |
-| `.claude/settings.json`             | wires both hooks to PreToolUse/PostToolUse            |
-| `.claude/settings.local.json`       | allow-list for git/gh commands (local, not committed) |
-| `docs/review-checklist.md`          | checklist `review-pr` checks against                  |
-| `.prettierrc` + `package.json`      | prettier config + devDependency                       |
+| File                                        | Purpose                                               |
+| ------------------------------------------- | ----------------------------------------------------- |
+| `.claude/skills/ship/SKILL.md`              | skill: review → test → commit → PR                    |
+| `.claude/skills/review-pr/SKILL.md`         | skill: review a real PR against the checklist         |
+| `.claude/skills/deliver/SKILL.md`           | chain skill: ship → review-pr                         |
+| `.claude/skills/breakdown-feature/SKILL.md` | skill: Notion spec → confirmed subtask checklist      |
+| `.claude/skills/plan-subtask/SKILL.md`      | skill: one subtask → implementation plan (no code)    |
+| `.claude/skills/start-feature/SKILL.md`     | chain skill: breakdown-feature → plan-subtask         |
+| `.claude/hooks/format.sh`                   | auto-format edited/created files                      |
+| `.claude/hooks/guard-commit.sh`             | block commit if typecheck is red                      |
+| `.claude/settings.json`                     | wires both hooks to PreToolUse/PostToolUse            |
+| `.claude/settings.local.json`               | allow-list for git/gh commands (local, not committed) |
+| `docs/review-checklist.md`                  | checklist `review-pr` checks against                  |
+| `.prettierrc` + `package.json`              | prettier config + devDependency                       |
