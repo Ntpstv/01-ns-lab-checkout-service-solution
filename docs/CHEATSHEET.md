@@ -55,9 +55,9 @@ ship  →  gh pr view --json number  →  review-pr $PR
 3. Invoke `review-pr` with that number
 4. Report the combined result: PR link + review verdict
 
-> Trained in this lab repo (Notion MCP is available here); designed generic so it can move to the real FE repo's .claude/skills/ once verified.
-
 ### `breakdown-feature`
+
+> Trained in this lab repo (Notion MCP is available here); designed generic so it can move to the real FE repo's .claude/skills/ once verified.
 
 `.claude/skills/breakdown-feature/SKILL.md`
 
