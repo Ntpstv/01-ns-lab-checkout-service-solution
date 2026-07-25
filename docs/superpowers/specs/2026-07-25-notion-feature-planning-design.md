@@ -74,10 +74,14 @@ produces a fresh plan rather than trusting a stale one.
 
 ### `plan-subtask`
 
-**Trigger:** `plan subtask <name or number>`
+**Trigger:** `plan subtask <notion-link> <name or number>`
 
-1. Resolve the referenced subtask (from a prior `breakdown-feature` run, or
-   by re-reading the Notion checklist directly).
+Takes the Notion link explicitly (rather than relying on chat context from a
+prior `breakdown-feature` run) so it works standalone, days later, in a fresh
+session.
+
+1. Resolve the referenced subtask by re-reading the Notion checklist
+   directly.
 2. Look at the target repo's current structure for relevant existing
    components/patterns, so the plan matches conventions already in place
    rather than inventing new ones.
