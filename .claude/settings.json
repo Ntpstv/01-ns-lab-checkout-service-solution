@@ -10,6 +10,16 @@
             "timeout": 60
           }
         ]
+      },
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/typecheck-edit.js\"",
+            "timeout": 30
+          }
+        ]
       }
     ],
     "PostToolUse": [
