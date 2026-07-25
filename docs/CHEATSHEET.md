@@ -1,6 +1,6 @@
 # Team Tools Cheatsheet — checkout-service
 
-Lab A · 13:00–14:45 · 3 skills + 2 hooks built for this repo.
+Lab A · 13:00–14:45 · 6 skills (3 for this repo + 3 FE-planning skills trained here) + 2 hooks.
 
 **Verified:** `npm run typecheck` green · `npm test` 29/29 passing
 

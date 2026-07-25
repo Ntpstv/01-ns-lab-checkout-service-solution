@@ -1,7 +1,7 @@
 ---
 name: start-feature
 description: Chain skill that breaks a Notion feature spec into subtasks, then plans each one the user chooses. Runs "breakdown-feature" followed by "plan-subtask" for selected subtasks. Use when the user says "start feature <notion-link>".
-allowed-tools: Skill
+allowed-tools: Skill, mcp__claude_ai_Notion__notion-fetch, mcp__claude_ai_Notion__notion-update-page, Read, Grep, Glob, Bash(find:*), Bash(ls:*), Bash(cat:*)
 argument-hint: [notion-link]
 ---
 
@@ -17,7 +17,7 @@ This skill does not duplicate `breakdown-feature` or `plan-subtask`'s logic — 
 
 2. **Ask the user which subtasks to plan now** — all of them, or a chosen subset. Wait for their answer before continuing.
 
-3. **Invoke the `plan-subtask` skill** once per chosen subtask, passing $1 (the same Notion link) and that subtask's name.
+3. **Invoke the `plan-subtask` skill** once per chosen subtask, passing $1 (the same Notion link) and that subtask's **number** (not its name). The `Skill` tool's `args` string is split on whitespace with no rest-of-line capture for the last placeholder, so a multi-word subtask name would silently truncate to its first word — the number is a single token and avoids this.
 
 4. **Report the outcome**: the Notion page link from step 1, followed by each plan produced in step 3, one after another.
 

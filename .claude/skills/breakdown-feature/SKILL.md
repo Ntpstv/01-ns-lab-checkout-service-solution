@@ -13,7 +13,7 @@ Notion page to break down: $1
 2. **Read** — Identify the feature's scope and acceptance criteria from the page content. If they aren't clear enough to break into concrete subtasks, stop and ask the user to clarify rather than inventing scope.
 3. **Propose** — Draft a subtask breakdown natural to FE work, grouping by concern such as: UI/component work, data-fetching or state, edge cases and error states, and tests. Present the proposed list to the user and wait for confirmation before writing anything.
 4. **Confirm** — If the user asks for changes, revise and re-present. Only proceed once they explicitly approve the list.
-5. **Write back** — Use `notion-update-page` to append the approved subtasks to the same page as a to-do checklist. Do not create a new page or overwrite existing content.
+5. **Write back** — Use `notion-update-page` to append the approved subtasks to the same page as a to-do checklist. Prefix each item with a continuous 1-based number across all groups — do not restart numbering per group (e.g. `1. Build a SearchInput component...`, `2. Style it per...`, continuing sequentially into the next group). This makes each subtask referenceable by a single, unambiguous number. Do not create a new page or overwrite existing content.
 6. **Report** — Give the user the page link back and the final list of subtasks written.
 
 ## Rules
